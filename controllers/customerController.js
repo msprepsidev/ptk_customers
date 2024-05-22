@@ -11,15 +11,19 @@ const CustomerController = {
             res.status(500).json({ message: 'Erreur lors de la création du nouveau client.' });
         }
     },
-    async findOne(req, res) {
+    async getCustomerById(req, res) {
         try {
-            const customer = await Customer.findById(req.params.id);
+            const customerId = req.params.id;
+            console.log(`Recherche du client avec l'ID : ${customerId}`);
+            const customer = await Customer.findById(customerId);
+
             if (!customer) {
-                return res.status(404).json({ message: 'Customer not found' });
+                return res.status(404).json({ message: 'Client non trouvé.' });
             }
+
             res.status(200).json(customer);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(500).json({ message: 'Erreur lors de la recherche du client.' });
         }
     },
 
@@ -34,10 +38,17 @@ const CustomerController = {
 
     async updateCustomer(req, res){
         try {
-            const customers = await Customer.find();
-            res.json(customers);
+            const customerId = req.params.id;
+            const updatedCustomerData = req.body;
+            const updatedCustomer = await Customer.findByIdAndUpdate(customerId, updatedCustomerData, { new: true, runValidators: true });
+
+            if (!updatedCustomer) {
+                return res.status(404).json({ message: 'Client non trouvé.' });
+            }
+
+            res.status(200).json(updatedCustomer);
         } catch (error) {
-            res.status(500).json({ message: 'Erreur lors de la récupération des clients depuis la base de données.' });
+            res.status(500).json({ message: 'Erreur lors de la mise à jour du client.' });
         }
     },
 

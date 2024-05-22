@@ -1,5 +1,5 @@
 {
-  "name": "customers",
+  "name": "ptk_customers",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
