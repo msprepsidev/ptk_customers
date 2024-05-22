@@ -13,7 +13,6 @@
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "jest": "^29.7.0",
     "jest-junit": "^16.0.0",
     "jest-unit": "^0.0.2",
     "jsonwebtoken": "^9.0.2",
@@ -24,5 +23,9 @@
   },
   "directories": {
     "test": "tests"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "sinon": "^18.0.0"
   }
 }

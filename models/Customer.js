@@ -19,7 +19,7 @@ const customerSchema = new mongoose.Schema({
     },
     address: {
         postalCode: {
-        type: Number,
+            type: Number,
         },
         city: {
             type: String,
