@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuites name="jest tests" tests="2" failures="0" errors="0" time="3.078">
-  <testsuite name="API Tests" errors="0" failures="0" skipped="0" timestamp="2024-05-22T19:29:40" time="2.946" tests="2">
-    <testcase classname="API Tests GET /customers - should return all customers" name="API Tests GET /customers - should return all customers" time="0.67">
+<testsuites name="jest tests" tests="5" failures="0" errors="0" time="8.778">
+  <testsuite name="Customer Controller" errors="0" failures="0" skipped="0" timestamp="2024-06-12T15:28:34" time="8.469" tests="5">
+    <testcase classname="Customer Controller should create a new customer" name="Customer Controller should create a new customer" time="0.465">
     </testcase>
-    <testcase classname="API Tests POST /customers - should create a new customers" name="API Tests POST /customers - should create a new customers" time="0.033">
+    <testcase classname="Customer Controller should get a customer by ID" name="Customer Controller should get a customer by ID" time="0.169">
+    </testcase>
+    <testcase classname="Customer Controller should get all customers" name="Customer Controller should get all customers" time="0.072">
+    </testcase>
+    <testcase classname="Customer Controller should update a customer" name="Customer Controller should update a customer" time="0.104">
+    </testcase>
+    <testcase classname="Customer Controller should delete a customer" name="Customer Controller should delete a customer" time="0.077">
     </testcase>
   </testsuite>
 </testsuites>

@@ -54,15 +54,19 @@ const CustomerController = {
 
     async deleteCustomer(req, res) {
         try {
-            const deletedCustomer = await Customer.findOneAndDelete({ id: req.params.id });
+            const customerId = req.params.id;
+            
+            const deletedCustomer = await Customer.findByIdAndDelete(customerId);
             if (!deletedCustomer) {
                 return res.status(404).json({ message: 'Client non trouvé.' });
             }
-            res.json({ message: 'Client supprimé avec succès.' });
+            res.status(200).json({ message: 'Client supprimé avec succès.' });
         } catch (error) {
+            console.error('Erreur lors de la suppression du client:', error); // Log the error
             res.status(500).json({ message: 'Erreur lors de la suppression du client.' });
         }
     }
+     
 }
 
 module.exports = CustomerController;

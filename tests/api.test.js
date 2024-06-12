@@ -1,87 +1,89 @@
-const app = require('../server.js')
-const request = require('supertest')
-const sinon = require('sinon');
-const Customer = require( '../models/Customer.js');
-const CustomerController = require ('../controllers/customerController.js')
+const request = require('supertest');
+const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const CustomerController = require('../controllers/customerController');
+const Customer = require('../models/Customer');
+const config = require('../config/config')
 
-let server;
+const app = express();
+app.use(bodyParser.json());
 
-beforeAll((done) => {
-    server = app.listen(5000, () => {
-        console.log('Test server running on port 5000');
-        done();
-    });
+app.post('/customers', CustomerController.createCustomer);
+app.get('/customers/:id', CustomerController.getCustomerById);
+app.get('/customers', CustomerController.getAllCustomers);
+app.put('/customers/:id', CustomerController.updateCustomer);
+app.delete('/customers/:id', CustomerController.deleteCustomer);
+
+beforeAll(async () => {
+    const url = config.mongoURI;
+    await mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
 });
 
-afterAll((done) => {
-    server.close(() => {
-        console.log('Test server closed');
-        done();
-    });
+afterAll(async () => {
+    await mongoose.connection.db.dropDatabase();
+    await mongoose.connection.close();
 });
 
-describe('API Tests', () => {
-    it('GET /customers - should return all customers', async () => {
-        const response = await request(server).get('/customers');
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toBeInstanceOf(Array);
-    });
+describe('Customer Controller', () => {
+    let customerId;
 
-    it('POST /customers - should create a new customers', async () => {
-        const req = {
-            body:{
-                _id: '664e46374248b620aba521c7',
+    it('should create a new customer', async () => {
+        const response = await request(app)
+            .post('/customers')
+            .send({
                 name: 'John',
-                lastname: 'DOE',
-                email: 'john@example.com',
-                phone: 1234567890,
+                lastname: 'Doe',
+                email: 'john.doe@example.com',
+                phone: 123456789,
                 address: {
-                    postalCode: 1234,
-                    city: 'New York',
-                    street: '5th Avenue',
-                  },
-                company: true,
-                
-            }
-           
-        };
+                    postalCode: 12345,
+                    city: 'Test City',
+                    street: '123 Test Street'
+                },
+                company: false
+            });
 
+        expect(response.status).toBe(201);
+        expect(response.body.name).toBe('John');
+        customerId = response.body._id;
+    });
 
-    const saveStub = sinon.stub(Customer.prototype, 'save').resolves(req.body);
+    it('should get a customer by ID', async () => {
+        const response = await request(app).get(`/customers/${customerId}`);
+        expect(response.status).toBe(200);
+        expect(response.body.name).toBe('John');
+    });
 
-      // Mock de l'objet de réponse
-      const res = { 
-        status: jest.fn(() => res), 
-        json: jest.fn(data => data)
-      };
+    it('should get all customers', async () => {
+        const response = await request(app).get('/customers');
+        expect(response.status).toBe(200);
+        expect(response.body.length).toBeGreaterThan(0);
+    });
 
-      // Appel de la méthode createCustomer
-      await CustomerController.createCustomer(req, res);
+    it('should update a customer', async () => {
+        const response = await request(app)
+            .put(`/customers/${customerId}`)
+            .send({
+                name: 'Jane',
+                lastname: 'Doe',
+                email: 'jane.doe@example.com',
+                phone: 987654321,
+                address: {
+                    postalCode: 54321,
+                    city: 'Updated City',
+                    street: '321 Updated Street'
+                },
+                company: true
+            });
 
-      console.log(res.json)
-      console.log("------------fi json--------------")
-      console.log(req.body)
+        expect(response.status).toBe(200);
+        expect(response.body.name).toBe('Jane');
+    });
 
-      // Assertions
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
-        name: 'John',
-        lastname: 'DOE',
-        email: 'john@example.com',
-        phone: 1234567890,
-        // Ajoutez d'autres propriétés si nécessaire
-      }));
-
-      // Restauration du stub
-      saveStub.restore();
-
-
-
-
-
-        
-        // const response = await request(server).post('/customers').send(newCustomer);
-        // expect(response.statusCode).toBe(201);
-        // expect(response.body).toMatchObject(newCustomer);
+    it('should delete a customer', async () => {
+        const response = await request(app).delete(`/customers/${customerId}`);
+        expect(response.status).toBe(200);
+        expect(response.body.message).toBe('Client supprimé avec succès.');
     });
 });
