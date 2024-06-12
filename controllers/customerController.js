@@ -51,7 +51,6 @@ const CustomerController = {
             res.status(500).json({ message: 'Erreur lors de la mise à jour du client.' });
         }
     },
-
     async deleteCustomer(req, res) {
         try {
             const customerId = req.params.id;
@@ -66,7 +65,6 @@ const CustomerController = {
             res.status(500).json({ message: 'Erreur lors de la suppression du client.' });
         }
     }
-     
 }
 
 module.exports = CustomerController;
