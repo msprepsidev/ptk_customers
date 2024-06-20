@@ -1,0 +1,139 @@
+openapi: 3.0.0
+info:
+  title: Customer API
+  version: 1.0.0
+  description: API for managing customers
+  contact:
+    name: PaytonKawa
+    email: 
+
+servers:
+  - url: http://localhost:3002
+
+components:
+  schemas:
+    Customer:
+      type: object
+      required:
+        - name
+        - lastname
+        - email
+        - company
+      properties:
+        name:
+          type: string
+        lastname:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          pattern: '^\\d{10}$'
+        address:
+          type: object
+          properties:
+            postalCode:
+              type: string
+              pattern: '^\\d{5}$'
+            city:
+              type: string
+            street:
+              type: string
+        company:
+          type: boolean
+
+paths:
+  /customer:
+    post:
+      summary: Create a new customer
+      tags:
+        - Customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: The customer was successfully created
+        '400':
+          description: Bad request
+
+  /customers:
+    get:
+      summary: Get all customers
+      tags:
+        - Customer
+      responses:
+        '200':
+          description: List of all customers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Customer'
+
+  /customer/{id}:
+    get:
+      summary: Get a customer by ID
+      tags:
+        - Customer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The customer ID
+      responses:
+        '200':
+          description: The customer description by ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+
+    put:
+      summary: Update a customer by ID
+      tags:
+        - Customer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The customer ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: The customer was updated
+        '404':
+          description: Customer not found
+
+    delete:
+      summary: Delete a customer by ID
+      tags:
+        - Customer
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The customer ID
+      responses:
+        '200':
+          description: The customer was deleted
+        '404':
+          description: Customer not found
