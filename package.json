@@ -1,5 +1,5 @@
 {
-  "name": "customers",
+  "name": "ptk_customers",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -9,17 +9,23 @@
   "author": "Papa Amadou GNING",
   "license": "MIT",
   "dependencies": {
+    "amqplib": "^0.10.4",
     "axios": "^1.6.8",
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "express-jwt": "^8.4.1",
     "jest-junit": "^16.0.0",
     "jest-unit": "^0.0.2",
     "jsonwebtoken": "^9.0.2",
     "mogoose": "^0.0.1-security",
-    "mongoose": "^8.4.0",
+    "mongoose": "^8.4.1",
     "nodemon": "^3.1.0",
-    "supertest": "^7.0.0"
+    "prom-client": "^15.1.2",
+    "supertest": "^7.0.0",
+    "winston": "^3.13.0",
+    "winston-mongodb": "^5.1.1"
   },
   "directories": {
     "test": "tests"
